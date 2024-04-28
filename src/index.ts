@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import bodyParser from 'body-parser';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -7,6 +8,10 @@ let products = [
   { id: 1, title: 'tomato' },
   { id: 2, title: 'orange' },
 ];
+
+const bodyParserJsonMiddleware = bodyParser.json();
+
+app.use(bodyParserJsonMiddleware);
 
 app.get('/products', (req: Request, res: Response) => {
   const { title } = req.query;
@@ -41,6 +46,22 @@ app.delete('/products/:id', (req: Request, res: Response) => {
 
   products = products.filter((p) => p.id !== Number(id));
   res.sendStatus(204);
+});
+
+app.post('/products', (req: Request, res: Response) => {
+  const { title } = req.body;
+  if (!title) {
+    res.sendStatus(400);
+    return;
+  }
+
+  const newProduct = {
+    id: Number(new Date()),
+    title,
+  };
+  products.push(newProduct);
+
+  res.status(201).send(newProduct);
 });
 
 app.listen(port, () => {
