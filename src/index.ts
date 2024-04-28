@@ -3,18 +3,13 @@ import express, { Request, Response } from 'express';
 const app = express();
 const port = process.env.PORT || 3000;
 
-const products = [
+let products = [
   { id: 1, title: 'tomato' },
-  { id: 1, title: 'orange' },
-];
-const addresses = [
-  { id: 1, value: 'Moscow' },
-  { id: 2, value: 'Perm' },
+  { id: 2, title: 'orange' },
 ];
 
 app.get('/products', (req: Request, res: Response) => {
   const { title } = req.query;
-  console.log('title', title);
   if (!title) {
     res.send(products);
     return;
@@ -23,8 +18,8 @@ app.get('/products', (req: Request, res: Response) => {
   res.send(products.filter((p) => p.title.indexOf(title as string) > -1));
 });
 
-app.get('/products/:title', (req: Request, res: Response) => {
-  const product = products.find((p) => p.title === req.params.title);
+app.get('/products/:id', (req: Request, res: Response) => {
+  const product = products.find((p) => p.id === Number(req.params.id));
 
   if (!product) {
     res.sendStatus(404);
@@ -34,19 +29,18 @@ app.get('/products/:title', (req: Request, res: Response) => {
   res.send(product);
 });
 
-app.get('/addresses', (_: Request, res: Response) => {
-  res.send(addresses);
-});
+app.delete('/products/:id', (req: Request, res: Response) => {
+  const { id } = req.params;
 
-app.get('/addresses/:id', (req: Request, res: Response) => {
-  const address = addresses.find((a) => a.id === Number(req.params.id));
+  const product = products.find((p) => p.id === Number(id));
 
-  if (!address) {
+  if (!product) {
     res.sendStatus(404);
     return;
   }
 
-  res.send(address);
+  products = products.filter((p) => p.id !== Number(id));
+  res.sendStatus(204);
 });
 
 app.listen(port, () => {
