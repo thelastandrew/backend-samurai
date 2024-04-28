@@ -64,6 +64,25 @@ app.post('/products', (req: Request, res: Response) => {
   res.status(201).send(newProduct);
 });
 
+app.put('/products/:id', (req: Request, res: Response) => {
+  const { id } = req.params;
+  const product = products.find((p) => p.id === Number(id));
+
+  if (!product) {
+    res.sendStatus(404);
+    return;
+  }
+
+  const { title } = req.body;
+  if (!title) {
+    res.sendStatus(400);
+    return;
+  }
+
+  product.title = title;
+  res.send(product);
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
