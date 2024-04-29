@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
-import { HTTP_STATUSES } from './constants/statusCodes.ts';
+import { HTTP_STATUSES } from './constants/statusCodes';
 
 export const app = express();
 const port = process.env.PORT || 3000;
