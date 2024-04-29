@@ -5,10 +5,12 @@ import { HTTP_STATUSES } from '../../src/constants/statusCodes';
 const requestBody = { title: 'orange' };
 const updatedBody = { title: 'apple' };
 const createNewProduct = async () => {
-  return request(app)
+  const createRequest = await request(app)
     .post('/products')
     .send(requestBody)
     .expect(HTTP_STATUSES.CREATED_201);
+
+  return createRequest.body;
 };
 
 describe('/products', () => {
@@ -26,8 +28,7 @@ describe('/products', () => {
   });
 
   it('should return 200 for existing produnct', async () => {
-    const createdResponse = await createNewProduct();
-    const createdProduct = createdResponse.body;
+    const createdProduct = await createNewProduct();
     await request(app)
       .get(`/products/${createdProduct.id}`)
       .expect(HTTP_STATUSES.OK_200, createdProduct);
@@ -35,8 +36,7 @@ describe('/products', () => {
 
   // POST REQUESTS
   it('should create new product', async () => {
-    const createResponse = await createNewProduct();
-    const createdProduct = createResponse.body;
+    const createdProduct = await createNewProduct();
     expect(createdProduct).toEqual({ id: expect.any(Number), ...requestBody });
     await request(app)
       .get('/products')
@@ -57,8 +57,7 @@ describe('/products', () => {
 
   // PUT REQUESTS
   it('should update existing product', async () => {
-    const createResponse = await createNewProduct();
-    const createdProduct = createResponse.body;
+    const createdProduct = await createNewProduct();
     const updateRequest = await request(app)
       .put(`/products/${createdProduct.id}`)
       .send(updatedBody)
@@ -77,8 +76,7 @@ describe('/products', () => {
   });
 
   it('should return 400 for updating product with incorrect body', async () => {
-    const createResponse = await createNewProduct();
-    const createdProduct = createResponse.body;
+    const createdProduct = await createNewProduct();
     await request(app)
       .put(`/products/${createdProduct.id}`)
       .send({}) // empty body obj
@@ -94,8 +92,7 @@ describe('/products', () => {
 
   // DELETE REQUESTS
   it('should delete existing product', async () => {
-    const createResponse = await createNewProduct();
-    const createdProduct = createResponse.body;
+    const createdProduct = await createNewProduct();
     await request(app)
       .delete(`/products/${createdProduct.id}`)
       .expect(HTTP_STATUSES.NO_CONTENT_204);
