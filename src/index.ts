@@ -1,7 +1,8 @@
 import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
+import { HTTP_STATUSES } from './constants/statusCodes';
 
-const app = express();
+export const app = express();
 const port = process.env.PORT || 3000;
 
 let products = [
@@ -27,7 +28,7 @@ app.get('/products/:id', (req: Request, res: Response) => {
   const product = products.find((p) => p.id === Number(req.params.id));
 
   if (!product) {
-    res.sendStatus(404);
+    res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
     return;
   }
 
@@ -40,18 +41,18 @@ app.delete('/products/:id', (req: Request, res: Response) => {
   const product = products.find((p) => p.id === Number(id));
 
   if (!product) {
-    res.sendStatus(404);
+    res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
     return;
   }
 
   products = products.filter((p) => p.id !== Number(id));
-  res.sendStatus(204);
+  res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
 });
 
 app.post('/products', (req: Request, res: Response) => {
   const { title } = req.body;
   if (!title) {
-    res.sendStatus(400);
+    res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
     return;
   }
 
@@ -61,7 +62,7 @@ app.post('/products', (req: Request, res: Response) => {
   };
   products.push(newProduct);
 
-  res.status(201).send(newProduct);
+  res.status(HTTP_STATUSES.CREATED_201).send(newProduct);
 });
 
 app.put('/products/:id', (req: Request, res: Response) => {
@@ -69,18 +70,23 @@ app.put('/products/:id', (req: Request, res: Response) => {
   const product = products.find((p) => p.id === Number(id));
 
   if (!product) {
-    res.sendStatus(404);
+    res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
     return;
   }
 
   const { title } = req.body;
   if (!title) {
-    res.sendStatus(400);
+    res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
     return;
   }
 
   product.title = title;
   res.send(product);
+});
+
+app.delete('/__test__/products', (_: Request, res: Response) => {
+  products = [];
+  res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
 });
 
 app.listen(port, () => {
