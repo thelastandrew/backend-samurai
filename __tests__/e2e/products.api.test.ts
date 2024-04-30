@@ -1,10 +1,11 @@
 import request from 'supertest';
 import { app } from '../../src/index';
 import { HTTP_STATUSES } from '../../src/constants/statusCodes';
+import { ProductCreateModel,  ProductUpdateModel,  ProductViewModel } from '../../src/types/models';
 
-const requestBody = { title: 'orange' };
-const updatedBody = { title: 'apple' };
-const createNewProduct = async () => {
+const requestBody: ProductCreateModel = { title: 'orange', price: 2 };
+const updatedBody: ProductUpdateModel = { title: 'apple', price: 5 };
+const createNewProduct = async (): Promise<ProductViewModel> => {
   const createRequest = await request(app)
     .post('/products')
     .send(requestBody)
@@ -27,7 +28,7 @@ describe('/products', () => {
     await request(app).get('/products/1').expect(HTTP_STATUSES.NOT_FOUND_404);
   });
 
-  it('should return 200 for existing produnct', async () => {
+  it('should return 200 for existing product', async () => {
     const createdProduct = await createNewProduct();
     await request(app)
       .get(`/products/${createdProduct.id}`)
@@ -37,13 +38,17 @@ describe('/products', () => {
   // POST REQUESTS
   it('should create new product', async () => {
     const createdProduct = await createNewProduct();
-    expect(createdProduct).toEqual({ id: expect.any(Number), ...requestBody });
+    const expectedProduct: ProductViewModel = {
+      id: expect.any(Number),
+      title: requestBody.title,
+    };
+    expect(createdProduct).toEqual(expectedProduct);
     await request(app)
       .get('/products')
       .expect(HTTP_STATUSES.OK_200, [createdProduct]);
   });
 
-  it('sohuld return 400 for incorrect request body', async () => {
+  it('should return 400 for incorrect request body', async () => {
     await request(app)
       .post('/products')
       .send({}) // empty body obj
@@ -63,10 +68,14 @@ describe('/products', () => {
       .send(updatedBody)
       .expect(HTTP_STATUSES.OK_200);
     const updatedProduct = updateRequest.body;
-    expect(updatedProduct).toEqual({ ...createdProduct, ...updatedBody });
+    const expectedProduct: ProductViewModel = {
+      id: createdProduct.id,
+      title: updatedProduct.title,
+    };
+    expect(updatedProduct).toEqual(expectedProduct);
     await request(app)
       .get('/products')
-      .expect(HTTP_STATUSES.OK_200, [updatedProduct]);
+      .expect(HTTP_STATUSES.OK_200, [expectedProduct]);
   });
 
   it('should return 404 for updating unexisting product', async () => {
