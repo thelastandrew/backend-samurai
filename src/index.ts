@@ -4,6 +4,9 @@ import { HTTP_STATUSES } from './constants/statusCodes';
 
 export const app = express();
 const port = process.env.PORT || 3000;
+const jsonBodyMiddleware = express.json();
+
+app.use(jsonBodyMiddleware);
 
 let products = [
   { id: 1, title: 'tomato' },
@@ -17,11 +20,11 @@ app.use(bodyParserJsonMiddleware);
 app.get('/products', (req: Request, res: Response) => {
   const { title } = req.query;
   if (!title) {
-    res.send(products);
+    res.json(products);
     return;
   }
 
-  res.send(products.filter((p) => p.title.indexOf(title as string) > -1));
+  res.json(products.filter((p) => p.title.indexOf(title as string) > -1));
 });
 
 app.get('/products/:id', (req: Request, res: Response) => {
@@ -32,7 +35,7 @@ app.get('/products/:id', (req: Request, res: Response) => {
     return;
   }
 
-  res.send(product);
+  res.json(product);
 });
 
 app.delete('/products/:id', (req: Request, res: Response) => {
@@ -62,7 +65,7 @@ app.post('/products', (req: Request, res: Response) => {
   };
   products.push(newProduct);
 
-  res.status(HTTP_STATUSES.CREATED_201).send(newProduct);
+  res.status(HTTP_STATUSES.CREATED_201).json(newProduct);
 });
 
 app.put('/products/:id', (req: Request, res: Response) => {
@@ -81,7 +84,7 @@ app.put('/products/:id', (req: Request, res: Response) => {
   }
 
   product.title = title;
-  res.send(product);
+  res.json(product);
 });
 
 app.delete('/__test__/products', (_: Request, res: Response) => {
