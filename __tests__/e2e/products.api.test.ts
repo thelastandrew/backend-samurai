@@ -5,6 +5,8 @@ import { ProductCreateModel,  ProductUpdateModel,  ProductViewModel } from '../.
 
 const requestBody: ProductCreateModel = { title: 'orange', price: 2 };
 const updatedBody: ProductUpdateModel = { title: 'apple', price: 5 };
+const updateTitle: ProductUpdateModel = { title: 'apple '};
+const updatePrice: ProductUpdateModel = { price: 5 };
 const createNewProduct = async (): Promise<ProductViewModel> => {
   const createRequest = await request(app)
     .post('/products')
@@ -61,11 +63,45 @@ describe('/products', () => {
   });
 
   // PUT REQUESTS
-  it('should update existing product', async () => {
+  it('should update existing product with full body', async () => {
     const createdProduct = await createNewProduct();
     const updateRequest = await request(app)
       .put(`/products/${createdProduct.id}`)
       .send(updatedBody)
+      .expect(HTTP_STATUSES.OK_200);
+    const updatedProduct = updateRequest.body;
+    const expectedProduct: ProductViewModel = {
+      id: createdProduct.id,
+      title: updatedProduct.title,
+    };
+    expect(updatedProduct).toEqual(expectedProduct);
+    await request(app)
+      .get('/products')
+      .expect(HTTP_STATUSES.OK_200, [expectedProduct]);
+  });
+
+  it('should update title of the existing product', async () => {
+    const createdProduct = await createNewProduct();
+    const updateRequest = await request(app)
+      .put(`/products/${createdProduct.id}`)
+      .send(updateTitle)
+      .expect(HTTP_STATUSES.OK_200);
+    const updatedProduct = updateRequest.body;
+    const expectedProduct: ProductViewModel = {
+      id: createdProduct.id,
+      title: updatedProduct.title,
+    };
+    expect(updatedProduct).toEqual(expectedProduct);
+    await request(app)
+      .get('/products')
+      .expect(HTTP_STATUSES.OK_200, [expectedProduct]);
+  });
+
+  it('should update price of the existing product', async () => {
+    const createdProduct = await createNewProduct();
+    const updateRequest = await request(app)
+      .put(`/products/${createdProduct.id}`)
+      .send(updatePrice)
       .expect(HTTP_STATUSES.OK_200);
     const updatedProduct = updateRequest.body;
     const expectedProduct: ProductViewModel = {
