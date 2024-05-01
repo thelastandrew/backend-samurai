@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { app } from '../../src/index';
+import { app } from '../../src/app';
 import { HTTP_STATUSES } from '../../src/constants/statusCodes';
 import { ProductCreateModel,  ProductUpdateModel,  ProductViewModel } from '../../src/types/models';
 

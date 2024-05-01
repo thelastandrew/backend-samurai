@@ -3,3 +3,7 @@ export type ProductType = {
   title: string,
   price: number,
 };
+
+export type DbType = {
+  products: ProductType[]
+}
