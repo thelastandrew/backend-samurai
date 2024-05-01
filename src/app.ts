@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { addProductsRoutes } from './routes/products';
-import { addTestsRouts } from './routes/tests';
+import { getProductsRouter } from './routes/products';
+import { getTestsRouter } from './routes/tests';
 import { db } from './db/db';
 
 export const app = express();
@@ -11,6 +11,5 @@ const jsonBodyMiddleware = express.json();
 
 app.use(bodyParserJsonMiddleware);
 app.use(jsonBodyMiddleware);
-
-addProductsRoutes(app, db);
-addTestsRouts(app, db);
+app.use('/products', getProductsRouter(db));
+app.use('/__test__', getTestsRouter(db));

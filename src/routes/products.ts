@@ -1,4 +1,4 @@
-import { Express, Response } from 'express';
+import { Response, Router } from 'express';
 import { DbType, ProductType } from '../types/common';
 import {
   GetProductsQueryModel,
@@ -17,8 +17,10 @@ import { HTTP_STATUSES } from '../constants/statusCodes';
 
 const getProductViewModel = (product: ProductType): ProductViewModel => ({ id: product.id, title: product.title });
 
-export const addProductsRoutes = (app: Express, db: DbType) => {
-  app.get('/products', (
+export const getProductsRouter = (db: DbType) => {
+  const router = Router();
+
+  router.get('/', (
     req: RequestWithQuery<GetProductsQueryModel>,
     res: Response<ProductViewModel[]>,
   ) => {
@@ -34,7 +36,7 @@ export const addProductsRoutes = (app: Express, db: DbType) => {
     );
   });
   
-  app.get('/products/:id', (
+  router.get('/:id', (
     req: RequestWithParams<ProductUriParamsIdModel>,
     res: Response<ProductViewModel>,
   ) => {
@@ -48,7 +50,7 @@ export const addProductsRoutes = (app: Express, db: DbType) => {
     res.json(getProductViewModel(product));
   });
   
-  app.delete('/products/:id', (
+  router.delete('/:id', (
     req: RequestWithParams<ProductUriParamsIdModel>,
     res: Response,
   ) => {
@@ -65,7 +67,7 @@ export const addProductsRoutes = (app: Express, db: DbType) => {
     res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
   });
   
-  app.post('/products', (
+  router.post('/', (
     req: RequestWithBody<ProductCreateModel>,
     res: Response<ProductViewModel>,
   ) => {
@@ -85,7 +87,7 @@ export const addProductsRoutes = (app: Express, db: DbType) => {
     res.status(HTTP_STATUSES.CREATED_201).json(getProductViewModel(newProduct));
   });
   
-  app.put('/products/:id', (
+  router.put('/:id', (
     req: RequestWithParamsAndBody<ProductUriParamsIdModel, ProductUpdateModel>,
     res: Response<ProductViewModel>,
   ) => {
@@ -107,4 +109,6 @@ export const addProductsRoutes = (app: Express, db: DbType) => {
     product.price = price ?? product.price;
     res.json(getProductViewModel(product));
   });
+
+  return router;
 };
