@@ -1,8 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { getProductsRouter } from './routes/products';
-import { getTestsRouter } from './routes/tests';
-import { db } from './db/db';
+import { getProductsRouter, getTestsRouter } from './routers';
+import { db } from './db';
 
 export const app = express();
 

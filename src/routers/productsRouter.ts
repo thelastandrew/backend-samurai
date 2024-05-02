@@ -1,19 +1,18 @@
 import { Response, Router } from 'express';
-import { DbType, ProductType } from '../types/common';
 import {
+  DbType,
+  ProductType,
   GetProductsQueryModel,
   ProductCreateModel,
   ProductUpdateModel,
   ProductUriParamsIdModel,
   ProductViewModel,
-} from '../types/models';
-import {
   RequestWithBody,
   RequestWithParams,
   RequestWithParamsAndBody,
   RequestWithQuery,
-} from '../types/requestTypes';
-import { HTTP_STATUSES } from '../constants/statusCodes';
+} from '../types';
+import { HTTP_STATUSES } from '../constants';
 
 const getProductViewModel = (product: ProductType): ProductViewModel => ({ id: product.id, title: product.title });
 

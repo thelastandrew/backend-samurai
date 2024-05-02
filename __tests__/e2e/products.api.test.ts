@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { app } from '../../src/app';
-import { HTTP_STATUSES } from '../../src/constants/statusCodes';
-import { ProductCreateModel,  ProductUpdateModel,  ProductViewModel } from '../../src/types/models';
+import { HTTP_STATUSES } from '../../src/constants';
+import { ProductCreateModel,  ProductUpdateModel,  ProductViewModel } from '../../src/types';
 
 const requestBody: ProductCreateModel = { title: 'orange', price: 2 };
 const updatedBody: ProductUpdateModel = { title: 'apple', price: 5 };

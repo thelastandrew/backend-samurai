@@ -1,4 +1,4 @@
-import { ProductType, DbType } from '../types/common';
+import { ProductType, DbType } from '../types';
 
 const products: ProductType[] = [
   { id: 1, title: 'tomato', price: 2 },
