@@ -1,12 +1,12 @@
 import { Response, Request, Router } from 'express';
 import { HTTP_STATUSES } from '../constants';
-import { DbType } from '../types';
+import { testRepository } from '../repositories/testRepository';
 
-export const getTestsRouter = (db: DbType) => {
+export const getTestsRouter = () => {
   const router = Router();
 
   router.delete('/products', (_: Request, res: Response) => {
-    db.products = [];
+    testRepository.clearProducts();
     res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
   });
   

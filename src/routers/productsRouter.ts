@@ -1,7 +1,5 @@
 import { Response, Router } from 'express';
 import {
-  DbType,
-  ProductType,
   GetProductsQueryModel,
   ProductCreateModel,
   ProductUpdateModel,
@@ -13,10 +11,9 @@ import {
   RequestWithQuery,
 } from '../types';
 import { HTTP_STATUSES } from '../constants';
+import { productsRepository } from '../repositories';
 
-const getProductViewModel = (product: ProductType): ProductViewModel => ({ id: product.id, title: product.title });
-
-export const getProductsRouter = (db: DbType) => {
+export const getProductsRouter = () => {
   const router = Router();
 
   router.get('/', (
@@ -24,46 +21,21 @@ export const getProductsRouter = (db: DbType) => {
     res: Response<ProductViewModel[]>,
   ) => {
     const { title } = req.query;
-    if (!title) {
-      res.json(db.products.map(getProductViewModel));
-      return;
-    }
-  
-    res.json(db.products
-      .filter((p) => p.title.indexOf(title) > -1)
-      .map(getProductViewModel)
-    );
+    res.json(productsRepository.getAllProducts(title))
   });
   
   router.get('/:id', (
     req: RequestWithParams<ProductUriParamsIdModel>,
     res: Response<ProductViewModel>,
   ) => {
-    const product = db.products.find((p) => p.id === Number(req.params.id));
+    const product = productsRepository.getProduct(Number(req.params.id));
   
     if (!product) {
       res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
       return;
     }
   
-    res.json(getProductViewModel(product));
-  });
-  
-  router.delete('/:id', (
-    req: RequestWithParams<ProductUriParamsIdModel>,
-    res: Response,
-  ) => {
-    const { id } = req.params;
-  
-    const product = db.products.find((p) => p.id === Number(id));
-  
-    if (!product) {
-      res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
-      return;
-    }
-  
-    db.products = db.products.filter((p) => p.id !== Number(id));
-    res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
+    res.json(product);
   });
   
   router.post('/', (
@@ -71,42 +43,49 @@ export const getProductsRouter = (db: DbType) => {
     res: Response<ProductViewModel>,
   ) => {
     const { title, price } = req.body;
-    if (!title) {
+    if (!title || !price) {
       res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
       return;
     }
-  
-    const newProduct: ProductType = {
-      id: Number(new Date()),
-      title,
-      price,
-    };
-    db.products.push(newProduct);
-  
-    res.status(HTTP_STATUSES.CREATED_201).json(getProductViewModel(newProduct));
+
+    const newProduct = productsRepository.createNewProduct({ title, price })
+    res.status(HTTP_STATUSES.CREATED_201).json(newProduct);
   });
   
   router.put('/:id', (
     req: RequestWithParamsAndBody<ProductUriParamsIdModel, ProductUpdateModel>,
     res: Response<ProductViewModel>,
   ) => {
-    const { id } = req.params;
-    const product = db.products.find((p) => p.id === Number(id));
+    const { title, price } = req.body;
+    if (!title && !price) {
+      res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
+      return;
+    }
+
+    const updatedProduct = productsRepository.updateProduct(Number(req.params.id), req.body);
+  
+    if (!updatedProduct) {
+      res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+      return;
+    }
+
+    res.json(updatedProduct);
+  });
+
+  router.delete('/:id', (
+    req: RequestWithParams<ProductUriParamsIdModel>,
+    res: Response,
+  ) => {
+    const idNum = Number(req.params.id);
+    const product = productsRepository.getProduct(idNum);
   
     if (!product) {
       res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
       return;
     }
   
-    const { title, price } = req.body;
-    if (!title && !price) {
-      res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
-      return;
-    }
-  
-    product.title = title ?? product.title;
-    product.price = price ?? product.price;
-    res.json(getProductViewModel(product));
+    productsRepository.deleteProduct(idNum)
+    res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
   });
 
   return router;

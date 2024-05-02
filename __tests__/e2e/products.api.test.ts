@@ -117,6 +117,7 @@ describe('/products', () => {
   it('should return 404 for updating unexisting product', async () => {
     await request(app)
       .put('/products/' + Number(new Date()))
+      .send(updatedBody)
       .expect(HTTP_STATUSES.NOT_FOUND_404);
   });
 
