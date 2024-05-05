@@ -25,22 +25,23 @@ export const getProductsRouter = () => {
 
   router.get(
     '/',
-    (
+    async (
       req: RequestWithQuery<GetProductsQueryModel>,
       res: Response<ProductViewModel[]>
     ) => {
       const { title } = req.query;
-      res.json(productsRepository.getAllProducts(title));
+      const products = await productsRepository.getAllProducts(title);
+      res.json(products);
     }
   );
 
   router.get(
     '/:id',
-    (
+    async (
       req: RequestWithParams<ProductUriParamsIdModel>,
       res: Response<ProductViewModel>
     ) => {
-      const product = productsRepository.getProduct(Number(req.params.id));
+      const product = await productsRepository.getProduct(Number(req.params.id));
 
       if (!product) {
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
@@ -56,13 +57,13 @@ export const getProductsRouter = () => {
     requiredBodyTitleValidation,
     requiredBodyPriceValidation,
     badRequestValidationMiddleware,
-    (
+    async (
       req: RequestWithBody<ProductCreateModel>,
       res: Response<ProductViewModel>
     ) => {
       const { title, price } = req.body;
 
-      const newProduct = productsRepository.createNewProduct({ title, price });
+      const newProduct = await productsRepository.createNewProduct({ title, price });
       res.status(HTTP_STATUSES.CREATED_201).json(newProduct);
     }
   );
@@ -72,7 +73,7 @@ export const getProductsRouter = () => {
     optionalBodyTitleValidation,
     optionalBodyPriceValidation,
     badRequestValidationMiddleware,
-    (
+    async (
       req: RequestWithParamsAndBody<
         ProductUriParamsIdModel,
         ProductUpdateModel
@@ -85,7 +86,7 @@ export const getProductsRouter = () => {
         return;
       }
 
-      const updatedProduct = productsRepository.updateProduct(
+      const updatedProduct = await productsRepository.updateProduct(
         Number(req.params.id),
         req.body
       );
@@ -101,16 +102,16 @@ export const getProductsRouter = () => {
 
   router.delete(
     '/:id',
-    (req: RequestWithParams<ProductUriParamsIdModel>, res: Response) => {
+    async (req: RequestWithParams<ProductUriParamsIdModel>, res: Response) => {
       const idNum = Number(req.params.id);
-      const product = productsRepository.getProduct(idNum);
+      const product = await productsRepository.getProduct(idNum);
 
       if (!product) {
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
         return;
       }
 
-      productsRepository.deleteProduct(idNum);
+      await productsRepository.deleteProduct(idNum);
       res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
     }
   );

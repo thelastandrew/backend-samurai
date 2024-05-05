@@ -1,7 +1,7 @@
 import { db } from '../db';
 
 export const testRepository = {
-  clearProducts: () => {
+  clearProducts: async () => {
     db.products = [];
   },
 };

@@ -4,7 +4,7 @@ import { ProductCreateModel, ProductType, ProductUpdateModel, ProductViewModel }
 const getProductViewModel = (product: ProductType): ProductViewModel => ({ id: product.id, title: product.title });
 
 export const productsRepository = {
-  getAllProducts: (title?: string) => {
+  getAllProducts: async (title?: string) => {
     if (!title) {
       return db.products.map(getProductViewModel);
     }
@@ -14,7 +14,7 @@ export const productsRepository = {
     .map(getProductViewModel);
   },
 
-  getProduct: (id: number) => {
+  getProduct: async (id: number) => {
     const foundProduct = db.products.find((p) => p.id === id);
 
     if (!foundProduct) return null;
@@ -22,7 +22,7 @@ export const productsRepository = {
     return getProductViewModel(foundProduct);
   },
 
-  createNewProduct: (productData: ProductCreateModel) => {
+  createNewProduct: async (productData: ProductCreateModel) => {
     const { title, price } = productData;
     const newProduct: ProductType = {
       id: Number(new Date()),
@@ -34,7 +34,7 @@ export const productsRepository = {
     return getProductViewModel(newProduct);
   },
 
-  updateProduct: (id: number, productData: ProductUpdateModel) => {
+  updateProduct: async (id: number, productData: ProductUpdateModel) => {
     const foundProduct = db.products.find((p) => p.id === id);
     if (!foundProduct) return null;
 
@@ -46,7 +46,7 @@ export const productsRepository = {
     return getProductViewModel(foundProduct);
   },
 
-  deleteProduct: (id: number) => {
+  deleteProduct: async (id: number) => {
     db.products = db.products.filter((p) => p.id !== id);
   },
 };

@@ -5,8 +5,8 @@ import { testRepository } from '../repositories/testRepository';
 export const getTestsRouter = () => {
   const router = Router();
 
-  router.delete('/products', (_: Request, res: Response) => {
-    testRepository.clearProducts();
+  router.delete('/products', async (_: Request, res: Response) => {
+    await testRepository.clearProducts();
     res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
   });
   
