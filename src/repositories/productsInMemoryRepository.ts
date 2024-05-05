@@ -1,9 +1,10 @@
+import { ProductsRepositoryType } from '../constants';
 import { db } from '../db';
 import { ProductCreateModel, ProductType, ProductUpdateModel, ProductViewModel } from '../types';
 
 const getProductViewModel = (product: ProductType): ProductViewModel => ({ id: product.id, title: product.title });
 
-export const productsRepository = {
+export const productsInMemoryRepository: ProductsRepositoryType = {
   getAllProducts: async (title?: string) => {
     if (!title) {
       return db.products.map(getProductViewModel);

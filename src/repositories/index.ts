@@ -1,1 +1,2 @@
-export * from './productsRepository';
+export * from './testRepository';
+export * from './productsInMemoryRepository';
