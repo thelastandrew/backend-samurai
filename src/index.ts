@@ -1,18 +1,15 @@
 import { config } from 'dotenv';
 import { app } from './app';
-import { connectToCluster } from './db';
+import { connectToDb } from './db';
 
 config();
 const port = process.env.PORT || 3000;
 
-app.listen(port, async () => {
-  const uri = process.env.DB_URI as string;
-  let mongoClient;
+const start = async () => {
+  await connectToDb();
+  app.listen(port, () => {
+    console.log(`Server is up and running on on port ${port}`);
+  })
+};
 
-  try {
-    console.log(`Example app listening on port ${port}`);
-    mongoClient = await connectToCluster(uri);
-  } finally {
-    await mongoClient?.close();
-  }
-});
+start();
