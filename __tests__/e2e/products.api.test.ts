@@ -65,53 +65,39 @@ describe(ROUTES.PRODUCTS, () => {
   // PUT REQUESTS
   it('should update existing product with full body', async () => {
     const createdProduct = await createNewProduct();
-    const updateRequest = await request(app)
+    await request(app)
       .put(`${ROUTES.PRODUCTS}/${createdProduct.id}`)
       .send(updatedBody)
-      .expect(HTTP_STATUSES.OK_200);
-    const updatedProduct = updateRequest.body;
-    const expectedProduct: ProductViewModel = {
-      id: createdProduct.id,
-      title: updatedProduct.title,
-    };
-    expect(updatedProduct).toEqual(expectedProduct);
+      .expect(HTTP_STATUSES.NO_CONTENT_204);
+    const updatedProduct: ProductViewModel = { ...createdProduct, title: updatedBody.title! };
+
     await request(app)
       .get(ROUTES.PRODUCTS)
-      .expect(HTTP_STATUSES.OK_200, [expectedProduct]);
+      .expect(HTTP_STATUSES.OK_200, [updatedProduct]);
   });
 
   it('should update title of the existing product', async () => {
     const createdProduct = await createNewProduct();
-    const updateRequest = await request(app)
+    await request(app)
       .put(`${ROUTES.PRODUCTS}/${createdProduct.id}`)
       .send(updateTitle)
-      .expect(HTTP_STATUSES.OK_200);
-    const updatedProduct = updateRequest.body;
-    const expectedProduct: ProductViewModel = {
-      id: createdProduct.id,
-      title: updatedProduct.title,
-    };
-    expect(updatedProduct).toEqual(expectedProduct);
+      .expect(HTTP_STATUSES.NO_CONTENT_204);
+    const updatedProduct: ProductViewModel = { ...createdProduct, title: updateTitle.title! };
+
     await request(app)
       .get(ROUTES.PRODUCTS)
-      .expect(HTTP_STATUSES.OK_200, [expectedProduct]);
+      .expect(HTTP_STATUSES.OK_200, [updatedProduct]);
   });
 
   it('should update price of the existing product', async () => {
     const createdProduct = await createNewProduct();
-    const updateRequest = await request(app)
+    await request(app)
       .put(`${ROUTES.PRODUCTS}/${createdProduct.id}`)
       .send(updatePrice)
-      .expect(HTTP_STATUSES.OK_200);
-    const updatedProduct = updateRequest.body;
-    const expectedProduct: ProductViewModel = {
-      id: createdProduct.id,
-      title: updatedProduct.title,
-    };
-    expect(updatedProduct).toEqual(expectedProduct);
+      .expect(HTTP_STATUSES.NO_CONTENT_204);
     await request(app)
       .get(ROUTES.PRODUCTS)
-      .expect(HTTP_STATUSES.OK_200, [expectedProduct]);
+      .expect(HTTP_STATUSES.OK_200, [createdProduct]);
   });
 
   it('should return 404 for updating unexisting product', async () => {

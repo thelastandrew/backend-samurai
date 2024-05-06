@@ -85,17 +85,17 @@ export const getProductsRouter = (repository: ProductsRepositoryType) => {
         return;
       }
 
-      const updatedProduct = await repository.updateProduct(
+      const isSuccess = await repository.updateProduct(
         Number(req.params.id),
         req.body
       );
 
-      if (!updatedProduct) {
+      if (!isSuccess) {
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
         return;
       }
 
-      res.json(updatedProduct);
+      res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
     }
   );
 

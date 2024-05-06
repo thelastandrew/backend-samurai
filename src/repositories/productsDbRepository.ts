@@ -1,21 +1,20 @@
 import { ProductsRepositoryType } from '../constants';
-import { db } from '../db';
+import { myDbProductsCollection } from '../db';
 import { ProductCreateModel, ProductType, ProductUpdateModel } from '../types';
 import { getProductViewModel } from '../utils';
 
-export const productsInMemoryRepository: ProductsRepositoryType = {
+export const productsDbRepository: ProductsRepositoryType = {
   getAllProducts: async (title?: string) => {
-    if (!title) {
-      return db.products.map(getProductViewModel);
+    const filter: any = {};
+    if (title) {
+      filter.title = { $regex: title };
     }
 
-    return db.products
-    .filter((p) => p.title.indexOf(title) > -1)
-    .map(getProductViewModel);
+    return myDbProductsCollection.find(filter).toArray();
   },
 
   getProduct: async (id: number) => {
-    const foundProduct = db.products.find((p) => p.id === id);
+    const foundProduct = await myDbProductsCollection.findOne({ id });
 
     if (!foundProduct) return null;
 
@@ -29,24 +28,23 @@ export const productsInMemoryRepository: ProductsRepositoryType = {
       title,
       price,
     };
-    db.products.push(newProduct);
+    await myDbProductsCollection.insertOne(newProduct);
 
     return getProductViewModel(newProduct);
   },
 
   updateProduct: async (id: number, productData: ProductUpdateModel) => {
-    const foundProduct = db.products.find((p) => p.id === id);
-    if (!foundProduct) return false;
-
+    const productToUpdate:ProductUpdateModel = {};
     const { title, price } = productData;
+    if (title) productToUpdate.title = title;
+    if (price) productToUpdate.price = price;
 
-    foundProduct.title = title ?? foundProduct.title;
-    foundProduct.price = price ?? foundProduct.price;
+    const { matchedCount } = await myDbProductsCollection.updateOne({ id }, { $set: productToUpdate });
 
-    return true;
+    return matchedCount === 1;
   },
 
   deleteProduct: async (id: number) => {
-    db.products = db.products.filter((p) => p.id !== id);
+    await myDbProductsCollection.deleteOne({ id });
   },
 };
