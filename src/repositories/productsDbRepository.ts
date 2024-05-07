@@ -9,8 +9,9 @@ export const productsDbRepository: ProductsRepositoryType = {
     if (title) {
       filter.title = { $regex: title };
     }
+    const foundProducts = await myDbProductsCollection.find(filter).toArray();
 
-    return myDbProductsCollection.find(filter).toArray();
+    return foundProducts.map(getProductViewModel);
   },
 
   getProduct: async (id: number) => {
@@ -34,12 +35,15 @@ export const productsDbRepository: ProductsRepositoryType = {
   },
 
   updateProduct: async (id: number, productData: ProductUpdateModel) => {
-    const productToUpdate:ProductUpdateModel = {};
+    const productToUpdate: ProductUpdateModel = {};
     const { title, price } = productData;
     if (title) productToUpdate.title = title;
     if (price) productToUpdate.price = price;
 
-    const { matchedCount } = await myDbProductsCollection.updateOne({ id }, { $set: productToUpdate });
+    const { matchedCount } = await myDbProductsCollection.updateOne(
+      { id },
+      { $set: productToUpdate }
+    );
 
     return matchedCount === 1;
   },
