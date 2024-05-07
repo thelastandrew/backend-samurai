@@ -1,4 +1,8 @@
-import { ProductCreateModel, ProductUpdateModel, ProductViewModel } from '../types';
+import {
+  ProductCreateModel,
+  ProductUpdateModel,
+  ProductViewModel,
+} from '../types';
 
 export enum HTTP_STATUSES {
   OK_200 = 200,
@@ -24,16 +28,8 @@ export enum SAMPLE_MFLIX_COLLECTIONS {
   MOVIES = 'movies',
   SESSIONS = 'sessions',
   THEATERS = 'theaters',
-  USERS = 'users'
+  USERS = 'users',
 }
-
-export type ProductsRepositoryType = {
-  getAllProducts: (title?: string) => Promise<ProductViewModel[]>;
-  getProduct: (id: number) => Promise<ProductViewModel | null>;
-  createNewProduct: (productData: ProductCreateModel) => Promise<ProductViewModel>;
-  updateProduct: (id: number, productData: ProductUpdateModel) => Promise<boolean>;
-  deleteProduct: (id: number) => Promise<void>;
-};
 
 export enum ROUTES {
   PRODUCTS = '/products',

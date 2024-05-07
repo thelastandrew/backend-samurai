@@ -1,6 +1,9 @@
-import { ProductsRepositoryType } from '../constants';
 import { myDbProductsCollection } from '../db';
-import { ProductCreateModel, ProductType, ProductUpdateModel } from '../types';
+import {
+  ProductType,
+  ProductUpdateModel,
+  ProductsRepositoryType,
+} from '../types';
 import { getProductViewModel } from '../utils';
 
 export const productsDbRepository: ProductsRepositoryType = {
@@ -17,32 +20,19 @@ export const productsDbRepository: ProductsRepositoryType = {
   getProduct: async (id: number) => {
     const foundProduct = await myDbProductsCollection.findOne({ id });
 
-    if (!foundProduct) return null;
-
-    return getProductViewModel(foundProduct);
+    return foundProduct ? getProductViewModel(foundProduct) : null;
   },
 
-  createNewProduct: async (productData: ProductCreateModel) => {
-    const { title, price } = productData;
-    const newProduct: ProductType = {
-      id: Number(new Date()),
-      title,
-      price,
-    };
+  createNewProduct: async (newProduct: ProductType) => {
     await myDbProductsCollection.insertOne(newProduct);
 
     return getProductViewModel(newProduct);
   },
 
   updateProduct: async (id: number, productData: ProductUpdateModel) => {
-    const productToUpdate: ProductUpdateModel = {};
-    const { title, price } = productData;
-    if (title) productToUpdate.title = title;
-    if (price) productToUpdate.price = price;
-
     const { matchedCount } = await myDbProductsCollection.updateOne(
       { id },
-      { $set: productToUpdate }
+      { $set: productData }
     );
 
     return matchedCount === 1;

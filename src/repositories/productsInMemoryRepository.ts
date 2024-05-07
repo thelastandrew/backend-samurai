@@ -1,4 +1,4 @@
-import { ProductsRepositoryType } from '../constants';
+import { ProductsRepositoryType } from '../types';
 import { db } from '../db';
 import { ProductCreateModel, ProductType, ProductUpdateModel } from '../types';
 import { getProductViewModel } from '../utils';
@@ -10,8 +10,8 @@ export const productsInMemoryRepository: ProductsRepositoryType = {
     }
 
     return db.products
-    .filter((p) => p.title.indexOf(title) > -1)
-    .map(getProductViewModel);
+      .filter((p) => p.title.indexOf(title) > -1)
+      .map(getProductViewModel);
   },
 
   getProduct: async (id: number) => {
