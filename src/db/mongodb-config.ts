@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 import { config } from 'dotenv';
-import { DATABASES, MY_DB_COLLECTIONS } from '../constants';
+import { DATABASES, MY_DB_COLLECTIONS, SAMPLE_COLLECTIONS } from '../constants';
 import { ProductType } from '../types';
 
 config();
@@ -8,7 +8,12 @@ const mongoUri = process.env.DB_URI as string;
 
 const client = new MongoClient(mongoUri);
 const myDb = client.db(DATABASES.MY_DB);
-export const myDbProductsCollection = myDb.collection<ProductType>(MY_DB_COLLECTIONS.PRODUCTS);
+const sampleDb = client.db(DATABASES.SAMPLE_DB);
+
+export const myDbProductsCollection = myDb.collection<ProductType>(
+  MY_DB_COLLECTIONS.PRODUCTS
+);
+export const moviesCollection = sampleDb.collection(SAMPLE_COLLECTIONS.MOVIES);
 
 export const connectToDb = async () => {
   try {

@@ -15,14 +15,14 @@ export enum HTTP_STATUSES {
 
 export enum DATABASES {
   MY_DB = 'my-db',
-  SAMPLE_MFLIX = 'sample_mflix',
+  SAMPLE_DB = 'sample_mflix',
 }
 
 export enum MY_DB_COLLECTIONS {
   PRODUCTS = 'products',
 }
 
-export enum SAMPLE_MFLIX_COLLECTIONS {
+export enum SAMPLE_COLLECTIONS {
   COMMENTS = 'comments',
   EMBEDDED_MOVIES = 'embedded_movies',
   MOVIES = 'movies',
@@ -34,6 +34,7 @@ export enum SAMPLE_MFLIX_COLLECTIONS {
 export enum ROUTES {
   PRODUCTS = '/products',
   PRODUCTS_DB = '/products-db',
+  MOVIES = '/movies',
   TEST = '/__test__',
 }
 
@@ -42,3 +43,4 @@ export const MAX_TITLE_LENGTH = 30;
 export const titleLengthErrorMsg = `Title length must be from ${MIN_TITLE_LENGTH} to ${MAX_TITLE_LENGTH} characters`;
 export const titleRequiredErrorMsg = 'Title property is required';
 export const priceErrorMsg = 'Price must be an integer';
+

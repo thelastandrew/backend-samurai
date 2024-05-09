@@ -11,7 +11,6 @@ import {
   RequestWithParamsAndBody,
   RequestWithQuery,
 } from '../types';
-import { HTTP_STATUSES } from '../constants';
 import {
   badRequestValidationMiddleware,
   optionalBodyPriceValidation,
@@ -19,6 +18,7 @@ import {
   requiredBodyPriceValidation,
   requiredBodyTitleValidation,
 } from '../middlewares';
+import { HTTP_STATUSES } from '../constants';
 
 export const getProductsRouter = (productsService: ProductsServiceType) => {
   const router = Router();

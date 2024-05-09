@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { getProductsRouter, getTestsRouter } from './routers';
+import { getMoviesRouter, getProductsRouter, getTestsRouter } from './routers';
 import {
   productsInMemoryRepository,
   productsDbRepository,
@@ -21,4 +21,5 @@ app.use(jsonBodyMiddleware);
 app.use(ROUTES.PRODUCTS, getProductsRouter(productsInMemoryService));
 app.use(ROUTES.PRODUCTS_DB, getProductsRouter(productsDbService));
 app.use(ROUTES.TEST, getTestsRouter());
+app.use(ROUTES.MOVIES, getMoviesRouter());
 
