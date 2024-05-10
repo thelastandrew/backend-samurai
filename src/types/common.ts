@@ -1,4 +1,5 @@
 import {
+  MovieViewModel,
   ProductCreateModel,
   ProductUpdateModel,
   ProductViewModel,
@@ -10,8 +11,27 @@ export type ProductType = {
   price: number;
 };
 
+export type MovieType = {
+  _id: string;
+  plot: string;
+  genres: string[];
+  title: string;
+  released: Date;
+  year: number;
+  directors: string[];
+  writers?: string[];
+};
+
 export type DbType = {
   products: ProductType[];
+};
+
+export type MoviesResponse = {
+  totalCount: number;
+  pagesCount: number;
+  nextPage: number | null;
+  prevPage: number | null;
+  movies: MovieViewModel[];
 };
 
 export type ProductsRepositoryType = {

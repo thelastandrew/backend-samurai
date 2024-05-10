@@ -1,6 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
-import { validationResult, body } from 'express-validator';
-import { HTTP_STATUSES, MAX_TITLE_LENGTH, MIN_TITLE_LENGTH, priceErrorMsg, titleLengthErrorMsg, titleRequiredErrorMsg } from '../constants';
+import { validationResult, body, query } from 'express-validator';
+import {
+  HTTP_STATUSES,
+  MAX_TITLE_LENGTH,
+  MIN_TITLE_LENGTH,
+  pageErrorMEssage,
+  priceErrorMsg,
+  titleLengthErrorMsg,
+  titleRequiredErrorMsg,
+} from '../constants';
 
 const exceptionMiddleware =
   (status: HTTP_STATUSES) =>
@@ -42,7 +50,13 @@ export const requiredBodyPriceValidation = body('price')
   .withMessage('Price property is required')
   .isNumeric()
   .withMessage(priceErrorMsg);
+
 export const optionalBodyPriceValidation = body('price')
   .optional()
   .isNumeric()
   .withMessage(priceErrorMsg);
+
+export const pageQueryValidation = query('page')
+  .optional()
+  .isInt({ min: 1 })
+  .withMessage(pageErrorMEssage);

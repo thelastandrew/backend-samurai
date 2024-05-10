@@ -44,3 +44,7 @@ export const titleLengthErrorMsg = `Title length must be from ${MIN_TITLE_LENGTH
 export const titleRequiredErrorMsg = 'Title property is required';
 export const priceErrorMsg = 'Price must be an integer';
 
+export const PAGE_SIZE = 5;
+export const DEFAULT_PAGE = 0;
+export const pageErrorMEssage = 'Page must be an integer greater or equal to 1';
+
