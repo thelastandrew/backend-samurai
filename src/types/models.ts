@@ -10,4 +10,5 @@ export type MovieViewModel = Pick<
   MovieType,
   '_id' | 'title' | 'year' | 'directors' | 'writers' | 'plot'
 >;
+export type MovieUriParamsModel = { id: string };
 export type GetMovieQueryModel = { page?: number };

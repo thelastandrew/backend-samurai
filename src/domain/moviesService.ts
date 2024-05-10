@@ -1,6 +1,6 @@
 import { DEFAULT_PAGE, PAGE_SIZE } from '../constants';
 import { moviesRepository } from '../repositories/moviesRepository';
-import { MoviesResponse } from '../types';
+import { MovieType, MoviesResponse } from '../types';
 
 export const moviesService = {
   getAllMovies: async (page?: number): Promise<MoviesResponse> => {
@@ -14,5 +14,11 @@ export const moviesService = {
       !page || page === 1 ? 2 : page === pagesCount ? null : page + 1;
 
     return { totalCount, pagesCount, nextPage, prevPage, movies };
+  },
+
+  getMovie: async (id: string): Promise<MovieType | null> => {
+    if (id.length !== 24) return null;
+
+    return moviesRepository.getMovie(id);
   },
 };

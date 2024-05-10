@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import {
   MovieViewModel,
   ProductCreateModel,
@@ -12,7 +13,7 @@ export type ProductType = {
 };
 
 export type MovieType = {
-  _id: string;
+  _id: ObjectId;
   plot: string;
   genres: string[];
   title: string;
