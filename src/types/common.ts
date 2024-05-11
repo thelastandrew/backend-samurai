@@ -35,6 +35,13 @@ export type MoviesResponse = {
   movies: MovieViewModel[];
 };
 
+export type UserType = {
+  _id: ObjectId;
+  login: string;
+  password: string;
+  refreshToken: string;
+};
+
 export type ProductsRepositoryType = {
   getAllProducts: (title?: string) => Promise<ProductViewModel[]>;
   getProduct: (id: number) => Promise<ProductViewModel | null>;

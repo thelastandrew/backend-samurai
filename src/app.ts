@@ -1,6 +1,11 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { getMoviesRouter, getProductsRouter, getTestsRouter } from './routers';
+import {
+  getMoviesRouter,
+  getProductsRouter,
+  getTestsRouter,
+  getUsersRouter,
+} from './routers';
 import {
   productsInMemoryRepository,
   productsDbRepository,
@@ -22,4 +27,4 @@ app.use(ROUTES.PRODUCTS, getProductsRouter(productsInMemoryService));
 app.use(ROUTES.PRODUCTS_DB, getProductsRouter(productsDbService));
 app.use(ROUTES.TEST, getTestsRouter());
 app.use(ROUTES.MOVIES, getMoviesRouter());
-
+app.use(ROUTES.USERS, getUsersRouter());

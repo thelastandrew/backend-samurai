@@ -20,6 +20,7 @@ export enum DATABASES {
 
 export enum MY_DB_COLLECTIONS {
   PRODUCTS = 'products',
+  USERS = 'users',
 }
 
 export enum SAMPLE_COLLECTIONS {
@@ -35,6 +36,7 @@ export enum ROUTES {
   PRODUCTS = '/products',
   PRODUCTS_DB = '/products-db',
   MOVIES = '/movies',
+  USERS = '/users',
   TEST = '/__test__',
 }
 
