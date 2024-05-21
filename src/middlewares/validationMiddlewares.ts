@@ -60,3 +60,21 @@ export const pageQueryValidation = query('page')
   .optional()
   .isInt({ min: 1 })
   .withMessage(pageErrorMEssage);
+
+export const requiredBodyEmailValidation = body('email')
+  .notEmpty()
+  .withMessage('Email is required')
+  .isEmail()
+  .withMessage('Email is not valid');
+
+export const requiredBodySubjectValidation = body('subject')
+  .notEmpty()
+  .withMessage('Subject is required')
+  .isLength({ min: 2, max: 30 })
+  .withMessage('Subject must have length from 2 to 30');
+
+export const requiredBodyMessageValidation = body('message')
+  .notEmpty()
+  .withMessage('Message is required')
+  .isLength({ min: 2, max: 300 })
+  .withMessage('Message must have length from 2 t0 300');

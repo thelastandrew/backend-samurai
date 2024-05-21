@@ -37,6 +37,7 @@ export enum ROUTES {
   PRODUCTS_DB = '/products-db',
   MOVIES = '/movies',
   USERS = '/users',
+  MAIL = '/send',
   TEST = '/__test__',
 }
 

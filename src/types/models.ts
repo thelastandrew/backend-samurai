@@ -12,3 +12,6 @@ export type MovieViewModel = Pick<
 >;
 export type MovieUriParamsModel = { id: string };
 export type GetMovieQueryModel = { page?: number };
+
+export type MailViewModel = { email: string; subject: string; message: string };
+

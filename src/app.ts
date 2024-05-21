@@ -5,6 +5,7 @@ import {
   getProductsRouter,
   getTestsRouter,
   getUsersRouter,
+  getMailRouter,
 } from './routers';
 import {
   productsInMemoryRepository,
@@ -28,3 +29,4 @@ app.use(ROUTES.PRODUCTS_DB, getProductsRouter(productsDbService));
 app.use(ROUTES.TEST, getTestsRouter());
 app.use(ROUTES.MOVIES, getMoviesRouter());
 app.use(ROUTES.USERS, getUsersRouter());
+app.use(ROUTES.MAIL, getMailRouter());
